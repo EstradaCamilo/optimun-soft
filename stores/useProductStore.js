@@ -14,10 +14,6 @@ export const useProductStore = defineStore("product", () => {
   const loadingAction = ref(false);
   const columns = [
     {
-      key: "barcode",
-      label: "Código",
-    },
-    {
       key: "name",
       label: "Nombre",
     },
@@ -38,16 +34,24 @@ export const useProductStore = defineStore("product", () => {
       label: "Acciones",
     },
   ];
+  const currentPage = ref(1);
+  const totalPages = ref(1);
+  const perPage = ref(5);
+  const totalProducts = ref(0);
 
-  const fetchProducts = async (page = 1, limit = 10) => {
+  const fetchProducts = async () => {
     loadingProducts.value = true;
     try {
       const { data, error: fetchError } = await fetchProductsService(
-        page,
-        limit
+        currentPage.value,
+        perPage.value
       );
       if (fetchError.value) throw fetchError.value;
       products.value = data.value?.data?.products || [];
+      currentPage.value = data.value?.data?.meta?.page;
+      totalPages.value = data.value?.data?.meta?.totalPages;
+      totalProducts.value = data.value?.data?.meta?.totalProducts;
+      // console.log(data.value?.data?.meta?.totalPages);
     } catch (err) {
       toastService.error({ description: "Error al cargar productos" });
     } finally {
@@ -106,6 +110,10 @@ export const useProductStore = defineStore("product", () => {
     loadingProducts,
     loadingAction,
     columns,
+    currentPage,
+    totalPages,
+    perPage,
+    totalProducts,
     fetchProducts,
     createProduct,
     updateProduct,

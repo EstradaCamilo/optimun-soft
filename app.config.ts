@@ -3,6 +3,8 @@ export default defineAppConfig({
     gray: "zinc",
     primary: "cerulean",
     button: {
+      font: "font-normal",
+      rounded: "rounded-lg",
       base: "justify-center",
       variant: {
         solid: "shadow-none",
@@ -35,6 +37,7 @@ export default defineAppConfig({
         size: "md",
         base: "shadow-none",
       },
+      rounded: "rounded-lg",
       color: {
         white: {
           outline: "shadow-none ring-gray-200",
@@ -49,6 +52,7 @@ export default defineAppConfig({
         size: "md",
         base: "shadow-none",
       },
+      rounded: "rounded-lg",
       color: {
         white: {
           outline: "shadow-none ring-gray-200",
@@ -60,6 +64,7 @@ export default defineAppConfig({
         size: "md",
         base: "shadow-none",
       },
+      rounded: "rounded-lg",
       color: {
         white: {
           outline: "shadow-none ring-gray-200",
@@ -70,7 +75,7 @@ export default defineAppConfig({
       },
     },
     table: {
-      wrapper: "border rounded-md bg-white",
+      wrapper: "border rounded-lg bg-white",
       divide: "divide-y divide-gray-200",
       th: {
         color: "text-gray-900",
@@ -126,7 +131,8 @@ export default defineAppConfig({
     },
     pagination: {
       size: "md",
-      base: "min-w-[2rem] min-h-[2rem] justify-center ring-gray-200 shadow-none",
+      rounded: "first:rounded-s-lg last:rounded-e-lg",
+      base: "min-w-[2.25rem] min-h-[2.25rem] justify-center ring-gray-200 shadow-none",
     },
     notification: {
       icon: {
@@ -140,12 +146,13 @@ export default defineAppConfig({
       wrapper: "grid gap-0.5",
       padding: "px-3 py-2",
       size: "text-sm",
-      active:
-        "text-primary before:bg-primary-50 before:border-l-2 before:border-primary before:rounded-0 font-semibold",
+      active: "text-primary before:bg-primary-500/10 font-medium",
       icon: {
         base: "h-5 w-5 z-10 my-[1px]",
         active: "text-primary",
       },
+      base: "before:rounded-lg",
+      rounded: "rounded-lg",
     },
   },
 });

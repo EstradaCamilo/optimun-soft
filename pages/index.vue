@@ -59,6 +59,20 @@
       </template>
     </UTable>
 
+    <!-- Pagination -->
+    <div class="flex items-center justify-between gap-4">
+      <UPagination
+        v-model="productStore.currentPage"
+        :page-count="productStore.perPage"
+        :total="productStore.totalProducts"
+        :max="2"
+      />
+      <div class="flex items-center gap-2">
+        <!-- <span class="text-sm hidden sm:block">Por página</span> -->
+        <USelect v-model="productStore.perPage" :options="perPageOptions" />
+      </div>
+    </div>
+
     <!-- Modal -->
     <UModal v-model="modal.isOpen" prevent-close>
       <CrudProduct
@@ -81,6 +95,7 @@ useHead({
   title: "Inicio",
 });
 
+const perPageOptions = [5, 10, 25, 50];
 const productStore = useProductStore();
 
 onMounted(async () => {
@@ -112,4 +127,13 @@ const handleUpdate = (initialData) => {
 const handleDelete = (initialData) => {
   openModal("delete", initialData);
 };
+
+watch(
+  [() => productStore.currentPage, () => productStore.perPage],
+  async ([newCurrentPage, newPerPage]) => {
+    await productStore.fetchProducts();
+    console.log("newCurrentPage", newCurrentPage);
+    console.log("newPerPage", newPerPage);
+  }
+);
 </script>
