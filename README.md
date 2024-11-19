@@ -1,10 +1,27 @@
-# Nuxt Minimal Starter
+# OptimunSoft
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Esta aplicación permite gestionar productos mediante operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
 
-## Setup
+## Variables de entorno
 
-Make sure to install dependencies:
+Para configurar correctamente el entorno de desarrollo, debes definir las siguientes variables de entorno:
+
+- **API_URL**: URL base de la API.
+
+Crea un archivo `.env` en la raíz del proyecto con el siguiente formato:
+
+```bash
+# API
+API_URL=https://domain.com
+```
+
+## Referencias
+
+- Nuxt 3: [Documentación oficial](https://nuxt.com/docs/getting-started/introduction)
+
+## Configuración
+
+Asegúrese de instalar las dependencias:
 
 ```bash
 # npm
@@ -20,16 +37,16 @@ yarn install
 bun install
 ```
 
-## Development Server
+## Servidor de desarrollo
 
-Start the development server on `http://localhost:3000`:
+Inicie el servidor de desarrollo en `http://localhost:3000`:
 
 ```bash
 # npm
 npm run dev
 
 # pnpm
-pnpm dev
+pnpm run dev
 
 # yarn
 yarn dev
@@ -37,39 +54,3 @@ yarn dev
 # bun
 bun run dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
