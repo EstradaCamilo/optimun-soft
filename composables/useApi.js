@@ -1,8 +1,9 @@
-import { useFetch } from "#imports";
+import { useRuntimeConfig, useFetch } from "#imports";
 
 export const useApi = (url, options = {}) => {
+  const runtimeConfig = useRuntimeConfig();
   const params = {
-    baseURL: "/api",
+    baseURL: runtimeConfig.public.API_URL,
     key: url,
     watch: false,
     ...options,
