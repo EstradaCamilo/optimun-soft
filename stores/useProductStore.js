@@ -51,6 +51,7 @@ export const useProductStore = defineStore("product", () => {
         perPage.value
       );
       if (fetchError.value) throw fetchError.value;
+      // Set data
       products.value = data.value?.data?.products || [];
       currentPage.value = data.value?.data?.meta?.page;
       totalPages.value = data.value?.data?.meta?.totalPages;
@@ -68,9 +69,9 @@ export const useProductStore = defineStore("product", () => {
       const { error: fetchError } = await createProductService(product);
       if (fetchError.value) throw fetchError.value;
       toastService.success({ description: "Producto creado" });
-      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al crear producto" });
+      throw err;
     } finally {
       loadingAction.value = false;
     }
@@ -85,9 +86,9 @@ export const useProductStore = defineStore("product", () => {
       );
       if (fetchError.value) throw fetchError.value;
       toastService.success({ description: "Producto actualizado" });
-      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al actualizar producto" });
+      throw err;
     } finally {
       loadingAction.value = false;
     }
@@ -99,9 +100,9 @@ export const useProductStore = defineStore("product", () => {
       const { error: fetchError } = await deleteProductService(id);
       if (fetchError.value) throw fetchError.value;
       toastService.success({ description: "Producto eliminado" });
-      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al eliminar producto" });
+      throw err;
     } finally {
       loadingAction.value = false;
     }

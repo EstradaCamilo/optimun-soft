@@ -53,7 +53,7 @@
           name="service"
           label="Es un servicio"
         />
-        <UFormGroup name="taxes" label="Impuestos" required>
+        <UFormGroup name="taxes" label="Impuestos">
           <USelectMenu
             v-model="form.taxes"
             :options="selectOptions.taxes || []"
@@ -173,18 +173,15 @@ const handleAdd = async (data) => {
   const { _id, ...restData } = data;
   console.log("add", restData);
   await productStore.createProduct(restData);
-  emits("closeModal");
 };
 
 const handleUpdate = async (data) => {
   const { _id, ...restData } = data;
   await productStore.updateProduct(_id, restData);
-  emits("closeModal");
 };
 
 const handleDelete = async (data) => {
   await productStore.deleteProduct(data._id);
-  emits("closeModal");
 };
 
 const actionsHandles = {
@@ -198,6 +195,8 @@ const handleFormSubmit = async (event) => {
     const handleFunction = actionsHandles[action];
     if (handleFunction) {
       await handleFunction(event.data);
+      await productStore.fetchProducts();
+      emits("closeModal");
     }
   } catch (err) {
     console.error(`Error al realizar la acción ${action}:`, err);

@@ -137,7 +137,10 @@ const handleDelete = (initialData) => {
 
 watch(
   [() => productStore.currentPage, () => productStore.perPage],
-  async ([newCurrentPage, newPerPage]) => {
+  async ([newCurrentPage, newPerPage], [oldCurrentPage, oldPerPage]) => {
+    if (newPerPage !== oldPerPage) {
+      productStore.currentPage = 1;
+    }
     await productStore.fetchProducts();
   }
 );

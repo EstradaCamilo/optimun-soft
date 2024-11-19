@@ -114,8 +114,10 @@ export default defineAppConfig({
         background: "bg-gray-200/75",
       },
       shadow: "shadow-sm",
+      rounded: "rounded-lg",
     },
     card: {
+      rounded: "rounded-lg",
       body: {
         base: "",
         padding: "px-4 py-4 sm:p-4",
