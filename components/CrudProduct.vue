@@ -156,18 +156,22 @@ form.description = "Example";
 form.selling_price = 250000;
 form.product_cost = 200000;
 
-const handleAdd = async () => {
-  const { _id, ...restForm } = form;
-  await productStore.createProduct(restForm);
+const handleAdd = async (data) => {
+  const { _id, ...restData } = data;
+  console.log("add", restData);
+  await productStore.createProduct(restData);
+  emits("closeModal");
 };
 
-const handleUpdate = async () => {
-  const { _id, ...restForm } = form;
-  await productStore.updateProduct(_id, restForm);
+const handleUpdate = async (data) => {
+  const { _id, ...restData } = data;
+  await productStore.updateProduct(_id, restData);
+  emits("closeModal");
 };
 
-const handleDelete = async () => {
-  await productStore.deleteProduct(form._id);
+const handleDelete = async (data) => {
+  await productStore.deleteProduct(data._id);
+  emits("closeModal");
 };
 
 const actionsHandles = {
@@ -177,8 +181,14 @@ const actionsHandles = {
 };
 
 const handleFormSubmit = async (event) => {
-  const handleFunction = actionsHandles[action];
-  if (handleFunction) await handleFunction(event.data);
+  try {
+    const handleFunction = actionsHandles[action];
+    if (handleFunction) {
+      await handleFunction(event.data);
+    }
+  } catch (err) {
+    console.error(`Error al realizar la acción ${action}:`, err);
+  }
 };
 
 const getCategoriesOptions = async () => {

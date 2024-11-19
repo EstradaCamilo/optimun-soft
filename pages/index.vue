@@ -92,7 +92,7 @@ definePageMeta({
   layout: "dashboard",
 });
 useHead({
-  title: "Inicio",
+  title: "Productos",
 });
 
 const perPageOptions = [5, 10, 25, 50];

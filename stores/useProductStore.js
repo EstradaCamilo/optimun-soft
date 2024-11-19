@@ -51,7 +51,6 @@ export const useProductStore = defineStore("product", () => {
       currentPage.value = data.value?.data?.meta?.page;
       totalPages.value = data.value?.data?.meta?.totalPages;
       totalProducts.value = data.value?.data?.meta?.totalProducts;
-      // console.log(data.value?.data?.meta?.totalPages);
     } catch (err) {
       toastService.error({ description: "Error al cargar productos" });
     } finally {
@@ -62,10 +61,10 @@ export const useProductStore = defineStore("product", () => {
   const createProduct = async (product) => {
     loadingAction.value = true;
     try {
-      const { data, error: fetchError } = await createProductService(product);
+      const { error: fetchError } = await createProductService(product);
       if (fetchError.value) throw fetchError.value;
-      products.value.push(data.value);
       toastService.success({ description: "Producto creado" });
+      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al crear producto" });
     } finally {
@@ -76,14 +75,13 @@ export const useProductStore = defineStore("product", () => {
   const updateProduct = async (id, updatedProduct) => {
     loadingAction.value = true;
     try {
-      const { data, error: fetchError } = await updateProductService(
+      const { error: fetchError } = await updateProductService(
         id,
         updatedProduct
       );
       if (fetchError.value) throw fetchError.value;
-      const index = products.value.findIndex((product) => product.id === id);
-      if (index !== -1) products.value[index] = data.value;
       toastService.success({ description: "Producto actualizado" });
+      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al actualizar producto" });
     } finally {
@@ -96,8 +94,8 @@ export const useProductStore = defineStore("product", () => {
     try {
       const { error: fetchError } = await deleteProductService(id);
       if (fetchError.value) throw fetchError.value;
-      products.value = products.value.filter((product) => product.id !== id);
       toastService.success({ description: "Producto eliminado" });
+      await fetchProducts();
     } catch (err) {
       toastService.error({ description: "Error al eliminar producto" });
     } finally {

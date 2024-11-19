@@ -146,7 +146,7 @@ export default defineAppConfig({
       wrapper: "grid gap-0.5",
       padding: "px-3 py-2",
       size: "text-sm",
-      active: "text-primary before:bg-primary-500/10 font-medium",
+      active: "text-primary before:bg-primary-50 font-medium",
       icon: {
         base: "h-5 w-5 z-10 my-[1px]",
         active: "text-primary",
