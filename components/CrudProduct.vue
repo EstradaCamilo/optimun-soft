@@ -13,6 +13,9 @@
       @submit="handleFormSubmit"
     >
       <div v-if="['add', 'update'].includes(action)" class="space-y-4">
+        <UFormGroup name="barcode" label="Código" required>
+          <UInput v-model="form.barcode" placeholder="Código" />
+        </UFormGroup>
         <UFormGroup name="name" label="Nombre" required>
           <UInput v-model="form.name" placeholder="Nombre" />
         </UFormGroup>
@@ -58,6 +61,7 @@
             placeholder="Seleccione los impuestos"
             option-attribute="name"
             by="code"
+            :popper="{ placement: 'top-end' }"
           >
             <template #label>
               <span v-if="form.taxes.length" class="truncate">
@@ -139,8 +143,9 @@ const productStore = useProductStore();
 
 const form = reactive({
   _id: null,
-  id_category: null,
+  barcode: "",
   name: "",
+  id_category: null,
   description: "",
   service: false,
   selling_price: null,
@@ -150,11 +155,6 @@ const form = reactive({
 
 const categoriesOptions = ref([]);
 const taxesOptions = ref([]);
-
-form.name = "Example";
-form.description = "Example";
-form.selling_price = 250000;
-form.product_cost = 200000;
 
 const handleAdd = async (data) => {
   const { _id, ...restData } = data;
@@ -232,6 +232,10 @@ onMounted(async () => {
     });
     // Set id_category
     form.id_category = initialData.category?._id ?? null;
+    // Set taxes, delete _id
+    form.taxes = initialData.taxes?.map((tax) => {
+      return { code: tax?.code, name: tax?.name, percentage: tax?.percentage };
+    });
   }
   if (["add", "update"].includes(action)) {
     categoriesOptions.value = await getCategoriesOptions();

@@ -10,8 +10,9 @@ const taxSchema = z.object({
 });
 
 export const productSchema = z.object({
-  id_category: validString,
+  barcode: validString,
   name: validString,
+  id_category: validString,
   description: validString,
   service: z.boolean(),
   selling_price: validNumber.min(0),

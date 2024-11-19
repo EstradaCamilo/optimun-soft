@@ -14,6 +14,10 @@ export const useProductStore = defineStore("product", () => {
   const loadingAction = ref(false);
   const columns = [
     {
+      key: "barcode",
+      label: "Código",
+    },
+    {
       key: "name",
       label: "Nombre",
     },
