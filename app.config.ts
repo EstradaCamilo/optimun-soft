@@ -128,13 +128,24 @@ export default defineAppConfig({
       size: "md",
       base: "min-w-[2rem] min-h-[2rem] justify-center ring-gray-200 shadow-none",
     },
-  },
-  notification: {
-    icon: {
-      base: "w-6 h-6",
+    notification: {
+      icon: {
+        base: "w-6 h-6",
+      },
+      default: {
+        timeout: 3000,
+      },
     },
-    default: {
-      timeout: 3000,
+    verticalNavigation: {
+      wrapper: "grid gap-0.5",
+      padding: "px-3 py-2",
+      size: "text-sm",
+      active:
+        "text-primary before:bg-primary-50 before:border-l-2 before:border-primary before:rounded-0 font-semibold",
+      icon: {
+        base: "h-5 w-5 z-10 my-[1px]",
+        active: "text-primary",
+      },
     },
   },
 });

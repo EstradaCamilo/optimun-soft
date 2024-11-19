@@ -19,8 +19,20 @@
       :rows="productStore.products"
       :loading="productStore.loadingProducts"
     >
+      <template #name-data="{ row }">
+        <div class="sm:max-w-[280px] sm:truncate sm:...">
+          {{ row?.name }}
+        </div>
+      </template>
+
       <template #category.name-data="{ row }">
         <span class="capitalize">{{ row?.category?.name }}</span>
+      </template>
+
+      <template #description-data="{ row }">
+        <div class="sm:max-w-[280px] sm:truncate sm:...">
+          {{ row?.description }}
+        </div>
       </template>
 
       <template #selling_price-data="{ row }">
