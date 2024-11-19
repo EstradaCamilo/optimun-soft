@@ -154,5 +154,9 @@ export default defineAppConfig({
       base: "before:rounded-lg",
       rounded: "rounded-lg",
     },
+    tooltip: {
+      rounded: "rounded-lg",
+      base: "font-medium",
+    },
   },
 });

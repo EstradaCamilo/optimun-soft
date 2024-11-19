@@ -20,7 +20,7 @@
       :loading="productStore.loadingProducts"
     >
       <template #name-data="{ row }">
-        <div class="sm:max-w-[280px] sm:truncate sm:...">
+        <div class="sm:max-w-[250px] sm:truncate sm:...">
           {{ row?.name }}
         </div>
       </template>
@@ -30,7 +30,7 @@
       </template>
 
       <template #description-data="{ row }">
-        <div class="sm:max-w-[280px] sm:truncate sm:...">
+        <div class="sm:max-w-[250px] sm:truncate sm:...">
           {{ row?.description }}
         </div>
       </template>
@@ -41,20 +41,24 @@
 
       <template #actions-data="{ row }">
         <div class="flex gap-2">
-          <UButton
-            class="p-1"
-            color="gray"
-            variant="link"
-            icon="i-ph-pencil-simple-line"
-            @click="handleUpdate(row)"
-          />
-          <UButton
-            class="p-1"
-            color="gray"
-            variant="link"
-            icon="i-ph-trash"
-            @click="handleDelete(row)"
-          />
+          <UTooltip text="Editar" :popper="{ arrow: true }">
+            <UButton
+              class="p-1"
+              color="gray"
+              variant="link"
+              icon="i-ph-pencil-simple-line"
+              @click="handleUpdate(row)"
+            />
+          </UTooltip>
+          <UTooltip text="Eliminar" :popper="{ arrow: true }">
+            <UButton
+              class="p-1"
+              color="gray"
+              variant="link"
+              icon="i-ph-trash"
+              @click="handleDelete(row)"
+            />
+          </UTooltip>
         </div>
       </template>
     </UTable>
@@ -78,6 +82,10 @@
       <CrudProduct
         :initialData="modal.initialData"
         :action="modal.action"
+        :selectOptions="{
+          taxes: taxesOptions,
+          categories: categoriesOptions,
+        }"
         @closeModal="closeModal"
       />
     </UModal>
@@ -87,6 +95,9 @@
 <script setup>
 import { useProductStore } from "@/stores/useProductStore";
 import { formatPrice } from "@/utils/formatPrice";
+import { fetchCategories } from "@/services/categoryServices";
+import { fetchTaxes } from "@/services/taxServices";
+
 definePageMeta({
   name: "index",
   layout: "dashboard",
@@ -97,10 +108,6 @@ useHead({
 
 const perPageOptions = [5, 10, 25, 50];
 const productStore = useProductStore();
-
-onMounted(async () => {
-  await productStore.fetchProducts();
-});
 
 const modal = ref({
   isOpen: false,
@@ -132,8 +139,49 @@ watch(
   [() => productStore.currentPage, () => productStore.perPage],
   async ([newCurrentPage, newPerPage]) => {
     await productStore.fetchProducts();
-    console.log("newCurrentPage", newCurrentPage);
-    console.log("newPerPage", newPerPage);
   }
 );
+
+const getCategoriesOptions = async () => {
+  try {
+    const { data, error: fetchError } = await fetchCategories();
+    if (fetchError.value) throw fetchError.value;
+
+    return data.value?.categories?.map((category) => {
+      return {
+        value: category._id,
+        name: category.name.charAt(0).toUpperCase() + category.name.slice(1),
+      };
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  return [];
+};
+const getTaxesOptions = async () => {
+  try {
+    const { data, error: fetchError } = await fetchTaxes();
+    if (fetchError.value) throw fetchError.value;
+    // los impuestos tienen el mismo código, pero si no permito que se seleccionen todos, algunos productos presentan errores al no tener la opción disponible. hay 3 impuestos con el código "01", que corresponde al iva, por lo que al seleccionar uno, automáticamente se seleccionan los tres.
+    return data.value?.body || [];
+    // return data.value?.body?.reduce((acc, currentTax) => {
+    //   if (!acc.some((tax) => tax.code === currentTax.code)) {
+    //     acc.push(currentTax);
+    //   }
+    //   return acc;
+    // }, []);
+  } catch (error) {
+    console.error(error);
+  }
+  return [];
+};
+
+const categoriesOptions = ref([]);
+const taxesOptions = ref([]);
+
+onMounted(async () => {
+  await productStore.fetchProducts();
+  categoriesOptions.value = await getCategoriesOptions();
+  taxesOptions.value = await getTaxesOptions();
+});
 </script>

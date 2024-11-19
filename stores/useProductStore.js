@@ -31,7 +31,7 @@ export const useProductStore = defineStore("product", () => {
     },
     {
       key: "selling_price",
-      label: "Precio de venta",
+      label: "Precio venta",
     },
     {
       key: "actions",

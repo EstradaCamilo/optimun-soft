@@ -43,7 +43,7 @@
         <UFormGroup name="id_category" label="Categoría" required>
           <USelect
             v-model="form.id_category"
-            :options="categoriesOptions"
+            :options="selectOptions.categories || []"
             placeholder="Seleccione una categoría"
             option-attribute="name"
           />
@@ -56,7 +56,7 @@
         <UFormGroup name="taxes" label="Impuestos" required>
           <USelectMenu
             v-model="form.taxes"
-            :options="taxesOptions"
+            :options="selectOptions.taxes || []"
             multiple
             placeholder="Seleccione los impuestos"
             option-attribute="name"
@@ -104,8 +104,6 @@
 <script setup>
 import { useProductStore } from "@/stores/useProductStore";
 import { productSchema } from "@/schemas/productSchema";
-import { fetchCategories } from "@/services/categoryServices";
-import { fetchTaxes } from "@/services/taxServices";
 const props = defineProps({
   initialData: {
     type: [null, Object],
@@ -116,9 +114,13 @@ const props = defineProps({
     required: true,
     validator: (value) => ["add", "update", "delete"].includes(value),
   },
+  selectOptions: {
+    type: Object,
+    default: {},
+  },
 });
 
-const { action, initialData } = props;
+const { action, initialData, selectOptions } = props;
 
 const emits = defineEmits(["closeModal"]);
 
@@ -153,8 +155,19 @@ const form = reactive({
   taxes: [],
 });
 
-const categoriesOptions = ref([]);
-const taxesOptions = ref([]);
+const resetForm = () => {
+  Object.assign(form, {
+    _id: null,
+    barcode: "",
+    name: "",
+    id_category: null,
+    description: "",
+    service: false,
+    selling_price: null,
+    product_cost: null,
+    taxes: [],
+  });
+};
 
 const handleAdd = async (data) => {
   const { _id, ...restData } = data;
@@ -191,38 +204,6 @@ const handleFormSubmit = async (event) => {
   }
 };
 
-const getCategoriesOptions = async () => {
-  try {
-    const { data, error: fetchError } = await fetchCategories();
-    if (fetchError.value) throw fetchError.value;
-
-    return data.value?.categories?.map((category) => {
-      return {
-        value: category._id,
-        name: category.name.charAt(0).toUpperCase() + category.name.slice(1),
-      };
-    });
-  } catch (error) {
-    console.error(error);
-  }
-  return [];
-};
-const getTaxesOptions = async () => {
-  try {
-    const { data, error: fetchError } = await fetchTaxes();
-    if (fetchError.value) throw fetchError.value;
-    return data.value?.body?.reduce((acc, currentTax) => {
-      if (!acc.some((tax) => tax.code === currentTax.code)) {
-        acc.push(currentTax);
-      }
-      return acc;
-    }, []);
-  } catch (error) {
-    console.error(error);
-  }
-  return [];
-};
-
 onMounted(async () => {
   if (["update", "delete"].includes(action) && initialData) {
     Object.keys(form).forEach((key) => {
@@ -233,13 +214,18 @@ onMounted(async () => {
     // Set id_category
     form.id_category = initialData.category?._id ?? null;
     // Set taxes, delete _id
-    form.taxes = initialData.taxes?.map((tax) => {
-      return { code: tax?.code, name: tax?.name, percentage: tax?.percentage };
-    });
+    form.taxes =
+      initialData.taxes?.map((tax) => {
+        return {
+          code: tax?.code,
+          name: tax?.name,
+          percentage: tax?.percentage,
+        };
+      }) || [];
   }
-  if (["add", "update"].includes(action)) {
-    categoriesOptions.value = await getCategoriesOptions();
-    taxesOptions.value = await getTaxesOptions();
-  }
+});
+
+onUnmounted(() => {
+  resetForm();
 });
 </script>
